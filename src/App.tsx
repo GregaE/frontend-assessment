@@ -1,8 +1,63 @@
-import React from 'react';
-import './App.css';
+import { useState } from 'react';
+import countries from './constants/countries';
+import countryTableSchema from './constants/countryTableSchema';
+import { Country } from './interfaces/country';
 
 function App() {
-  return <table></table>;
+  const [data, setData] = useState(countries);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Country;
+    direction: 'asc' | 'desc';
+  } | null>(null);
+
+  const onSort = (key: keyof Country) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === 'asc' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setData(sortedData);
+  };
+
+  return (
+    <div>
+      <table>
+        <thead>
+          {countryTableSchema.map((header) => (
+            <th
+              style={{ cursor: 'pointer' }}
+              key={header.keyName}
+              onClick={() => onSort(header.keyName)}
+            >
+              {header.name}
+            </th>
+          ))}
+        </thead>
+        <tbody>
+          {data.map((country) => (
+            <tr key={country.country}>
+              {countryTableSchema.map((header) => (
+                <td key={`${country.country}-${header.keyName}`}>
+                  {country[header.keyName]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default App;
