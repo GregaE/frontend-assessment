@@ -34,22 +34,22 @@ function App() {
     <div>
       <table>
         <thead>
-          {countryTableSchema.map((header) => (
+          {countryTableSchema.map((column) => (
             <th
               style={{ cursor: 'pointer' }}
-              key={header.keyName}
-              onClick={() => onSort(header.keyName)}
+              key={column.keyName}
+              onClick={() => onSort(column.keyName)}
             >
-              {header.name}
+              {column.name}
             </th>
           ))}
         </thead>
         <tbody>
           {data.map((country) => (
             <tr key={country.country}>
-              {countryTableSchema.map((header) => (
-                <td key={`${country.country}-${header.keyName}`}>
-                  {country[header.keyName]}
+              {countryTableSchema.map((column) => (
+                <td key={`${country.country}-${column.keyName}`}>
+                  {country[column.keyName]}
                 </td>
               ))}
             </tr>
